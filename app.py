@@ -19,7 +19,7 @@ def verify_webhook():
     token = request.args.get("hub.verify_token")
     challenge = request.args.get("hub.challenge")
 
-    if mode == "subscribe" and token == VERIFY_TOKEN:
+    if mode == "subscribe" and token == VERIFY_TOKEN and challenge:
         return challenge, 200
     return "Token inválido", 403
 
