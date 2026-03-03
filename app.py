@@ -26,8 +26,23 @@ def verify_webhook():
 @app.route("/webhook", methods=["POST"])
 def receive_message():
     data = request.get_json()
-    print("Mensaje recibido:", data)
-    return jsonify({"status": "ok"}), 200
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    # Verificamos que sea un evento de página
+    if data.get("object") != "page":
+        return "Not a page event", 400
+
+    # Iteramos sobre entry (puede haber varios)
+    for entry in data.get("entry", []):
+
+        # Iteramos sobre messaging (puede haber varios)
+        for event in entry.get("messaging", []):
+
+            sender_id = event.get("sender", {}).get("id")
+            message   = event.get("message", {})
+            text      = message.get("text")
+
+            # Solo procesamos si hay texto (no postbacks, no reads)
+            if text:
+                print(f"Mensaje de {sender_id}: {text}")
+
+    return jsonify({"status": "ok"}), 200
