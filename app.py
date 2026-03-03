@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
+from messenger import send_text_message
 import os
 
 # Carga las variables del archivo .env
@@ -36,8 +37,9 @@ def receive_message():
             message   = event.get("message", {})
             text      = message.get("text")
 
-            if text:
-                print(f"Mensaje de {sender_id}: {text}")
+            if text and sender_id:
+                # Eco: el bot repite lo que dijo el usuario
+                send_text_message(sender_id, f"Recibí tu mensaje: {text}")
 
     return jsonify({"status": "ok"}), 200
 
