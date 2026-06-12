@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
-from messenger import send_text_message
+from messenger import send_text_message, send_buttons_message
 import os
 
 # Load environment variables from .env file
@@ -34,13 +34,35 @@ def receive_message():
     for entry in data.get("entry", []):
         for event in entry.get("messaging", []):
             sender_id = event.get("sender", {}).get("id")
+            # Detect message text
             message   = event.get("message", {})
             text      = message.get("text")
 
-            if text and sender_id:
-                # Echo: the bot repeats what the user said
-                send_text_message(sender_id, f"I received your message: {text}")
+            # Detect postback (button pressed)
+            postback = event.get("postback", {})
+            payload = postback.get("payload")
 
+            if sender_id: 
+                # Case 1: The user sent a text message.
+
+                if text:
+                    # Instead of just echoing, we will show them our menu buttons!
+
+                    send_buttons_message(sender_id, "What would you like to do?", [
+                        {"type": "postback", "title": "View lessons", "payload": "VIEW_LESSONS"},
+                        {"type": "postback", "title": "Take a quiz", "payload": "START_QUIZ"},
+                        {"type": "postback", "title": "Contact us", "payload": "CONTACT"} 
+                    ])
+
+                    # Case 2: The user pressed one of our buttons
+                elif payload:
+                    if payload == "VIEW_LESSONS":
+                        send_text_message(sender_id, "Here are your available lessons 📚")
+                    elif payload == "START_QUIZ":
+                        send_text_message(sender_id, "Starting quiz! 🎯")
+                    elif payload == "CONTACT":
+                        send_text_message(sender_id, "We'll be in touch shortly! 📩")
+ 
     return jsonify({"status": "ok"}), 200
 
 if __name__ == "__main__":
