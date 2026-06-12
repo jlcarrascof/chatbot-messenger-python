@@ -1,20 +1,7 @@
 {
-  "files.associations": {
-    ".gitignore": "ignore",
-    "*.gitignore": "ignore"
-  },
-  "python.analysis.exclude": [
-    "**/.gitignore",
-    "**/*.gitignore",
-    "**/venv/**",
-    "**/.venv/**",
-    "**/env/**",
-    "**/ENV/**"
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/venv/Lib/site-packages"
   ],
-  "python.analysis.include": [
-    "**/*.py"
-  ],
-  "python.analysis.diagnosticMode": "openFilesOnly",
-"python.analysis.typeCheckingMode": "basic",
-"python-envs.defaultEnvManager": "ms-python.python:system"
+  "pyrefly.pythonInterpreter": "${workspaceFolder}/venv/Scripts/python.exe"
 }
