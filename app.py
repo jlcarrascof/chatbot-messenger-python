@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from messenger import send_text_message
 import os
 
-# Carga las variables del archivo .env
+# Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
@@ -12,17 +12,17 @@ VERIFY_TOKEN = os.getenv("VERIFY_TOKEN")
 
 @app.route("/", methods=["GET"])
 def home():
-    return "Bot activo ✓", 200
+    return "Bot is running ✓", 200
 
 @app.route("/webhook", methods=["GET"])
 def verify_webhook():
-    mode = request.args.get("hub.mode")
-    token = request.args.get("hub.verify_token")
+    mode      = request.args.get("hub.mode")
+    token     = request.args.get("hub.verify_token")
     challenge = request.args.get("hub.challenge")
 
     if mode == "subscribe" and token == VERIFY_TOKEN and challenge:
         return challenge, 200
-    return "Token inválido", 403
+    return "Invalid token", 403
 
 @app.route("/webhook", methods=["POST"])
 def receive_message():
@@ -38,8 +38,8 @@ def receive_message():
             text      = message.get("text")
 
             if text and sender_id:
-                # Eco: el bot repite lo que dijo el usuario
-                send_text_message(sender_id, f"Recibí tu mensaje: {text}")
+                # Echo: the bot repeats what the user said
+                send_text_message(sender_id, f"I received your message: {text}")
 
     return jsonify({"status": "ok"}), 200
 

@@ -9,11 +9,11 @@ GRAPH_API_URL = "https://graph.facebook.com/v18.0/me/messages"
 
 def send_text_message(recipient_id, text):
     """
-    Envía un mensaje de texto simple a un usuario de Messenger.
-    
+    Sends a plain text message to a Messenger user.
+
     Args:
-        recipient_id: El sender.id del usuario al que responderemos
-        text: El texto del mensaje a enviar
+        recipient_id: The sender.id of the user to reply to
+        text: The text content of the message to send
     """
     payload = {
         "recipient": {"id": recipient_id},
@@ -27,8 +27,8 @@ def send_text_message(recipient_id, text):
     )
 
     if response.status_code != 200:
-        print(f"Error enviando mensaje: {response.status_code} - {response.text}")
+        print(f"Error sending message: {response.status_code} - {response.text}")
     else:
-        print(f"Mensaje enviado a {recipient_id}: {text}")
+        print(f"Message sent to {recipient_id}: {text}")
 
     return response
