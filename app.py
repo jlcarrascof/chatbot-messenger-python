@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
+from messenger import send_text_message
 import os
 
 # Carga las variables del archivo .env
@@ -26,7 +27,20 @@ def verify_webhook():
 @app.route("/webhook", methods=["POST"])
 def receive_message():
     data = request.get_json()
-    print("Mensaje recibido:", data)
+
+    if data.get("object") != "page":
+        return "Not a page event", 400
+
+    for entry in data.get("entry", []):
+        for event in entry.get("messaging", []):
+            sender_id = event.get("sender", {}).get("id")
+            message   = event.get("message", {})
+            text      = message.get("text")
+
+            if text and sender_id:
+                # Eco: el bot repite lo que dijo el usuario
+                send_text_message(sender_id, f"Recibí tu mensaje: {text}")
+
     return jsonify({"status": "ok"}), 200
 
 if __name__ == "__main__":
