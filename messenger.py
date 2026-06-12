@@ -37,10 +37,16 @@ def send_buttons_message(recipient_id, text, buttons):
     """
     Sends a template message with postback buttons to a Messenger user.
 
+    Meta API Constraints (Lec 11):
+    - Max 3 buttons per template message.
+    - Button title: Max 20 characters.
+    - Button payload: Max 1000 characters.
+    - Header text: Max 640 characters.
+
     Args:
         recipient_id: The sender.id of the user to reply to
-        text: Text to display above the buttons (max 640 characters)
-        buttons: A list of dicts representing the buttons (max 3 buttons)
+        text: Text to display above the buttons
+        buttons: A list of dicts representing the buttons
     """
     payload = {
         "recipient": {"id": recipient_id},
